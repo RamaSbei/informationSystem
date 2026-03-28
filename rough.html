@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Find Crime Rate</title>
+  </head>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+  <style>
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .main-container {
+      height: 100%;
+      width: 100%;
+      /* background-color: black; */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header-text {
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+    }
+    /* .crime-image {
+      height: 20vh;
+      width: 50%;
+      object-fit: cover;
+      -webkit-mask-image: radial-gradient(
+        circle,
+        rgba(0, 0, 0, 1) 60%,
+        rgba(0, 0, 0, 0) 100%
+      );
+      mask-image: radial-gradient(
+        circle,
+        rgba(0, 0, 0, 1) 60%,
+        rgba(0, 0, 0, 0) 100%
+      );
+    } */
+    #map {
+      height: 500px;
+      width: 100%;
+    }
+  </style>
+  <body>
+    <div class="main-container">
+      <!-- Header -->
+      <header id="header-ui" class="header-ui">
+        <div class="header-container">
+          <div class="header-text">
+            <h2 class="title">Find crime rate</h2>
+            <p>Enter a street location to find crime rates</p>
+          </div>
+          <!-- <img src="crime.png" alt="crime" class="crime-image" /> -->
+        </div>
+        <div>
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Enter Street Location"
+          />
+          <button id="search-button" onclick="searchLocation()">Search</button>
+        </div>
+      </header>
+
+      <!-- map -->
+      <!-- <div id="map"></div> -->
+    </div>
+    <!-- leaflet map -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js" integrity="sha512-OFs3W4DIZ5ZkrDhBFtsCP6JXtMEDGmhl0QPlmWYBJay40TT1n3gt2Xuw8Pf/iezgW9CdabjkNChRqozl/YADmg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js" integrity="sha512-BwHfrr4c9kmRkLw6iXFdzcdWV/PGkVgiIyIWLLlTSXzWQzxuSg4DiQUCpauz/EWjgk5TYQqX/kvn9pG1NpYfqg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" integrity="sha512-dfX5uYVXzyU8+KHqj8bjo7UkOdg18PaOtpa48djpNbZHwExddghZ+ZmzWT06R5v6NSk3ZUfsH6FNEDepLx9hPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  -->
+    <script>
+      var map = L.map("map").setView([51.46352, -2.583139], 10);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+
+      // L.marker([51.505,-0.09]).addTo(map)
+
+      let geoData;
+      // let layerGroup=L.layerGroup().addTo(map);
+
+      fetch("Street_crime_incidents.geojson")
+        .then((res) => res.json())
+        .then((data) => {
+          geoData = data;
+          console.log("geo data", geoData);
+
+          L.geoJSON(geoData, {
+            onEachFeature: function (feature, layer) {
+              layer.bindPopup(feature.properties.STREET_NAME);
+            },
+          }).addTo(map);
+          // }).addTo(layerGroup);
+        });
+    </script>
+  </body>
+</html>
