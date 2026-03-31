@@ -153,7 +153,7 @@
           );
           L.geoJSON(filteredData, {
             onEachFeature: function (feature, layer) {
-              layer.bindPopup(feature.properties.STREET_NAME);
+              layer.bindPopup("Street Name: " +feature.properties.STREET_NAME +"<br/>"+ "Crime Category: "+ feature.properties.CRIME_CATEGORY);
             },
           }).addTo(layerGroup);
         });

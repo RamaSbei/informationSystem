@@ -13,7 +13,7 @@ TODO: Brief outline of your project describing the dataset and a link to it.
 
 ## Design Mockups
 
-- [View First Mockup](https://ramasbei.github.io/informationSystem/mockup1.html)
-- [View Second Mockup](https://ramasbei.github.io/informationSystem/mockup2.html)
-- [View Third Mockup](https://ramasbei.github.io/informationSystem/mockup3.html)
-- [View Fourth Mockup](https://ramasbei.github.io/informationSystem/mockup4.html)
+- [View First Mockup](https://ramasbei.github.io/informationSystem/mockups/mockup1.html)
+- [View Second Mockup](https://ramasbei.github.io/informationSystem/mockups/mockup2.html)
+- [View Third Mockup](https://ramasbei.github.io/informationSystem/mockups/mockup3.html)
+- [View Fourth Mockup](https://ramasbei.github.io/informationSystem/mockups/mockup4.html)
