@@ -19,11 +19,11 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      background: linear-gradient(to bottom, #000047, #00001a);
     }
     .main-container {
       height: 100%;
       width: 100%;
-      background-color: black;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -31,21 +31,62 @@
       gap: 1rem;
     }
     #header-ui {
-      background-color: rgb(15, 15, 83);
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
       color: white;
-      width: 50%;
     }
+    .title-header {
+      display: flex;
+      justify-content: space-between;
+      width: 60%;
+      align-items: center;
+      border-bottom: rgba(255, 255, 255, 0.269) solid 0.5px;
+      margin: 1rem 1rem;
+    }
+    .title {
+      font-size: 2rem;
+    }
+    .auth {
+      width: 4vw;
+      opacity: 50%;
+    }
+    #search-input {
+      width: 300px;
+      height: 30px;
+      border-radius: 10px;
+      padding: 8px 10px;
+    }
+    #search-button {
+      padding: 15px 32px;
+      border-radius: 10px;
+      border: black solid 2px;
+      margin-left: 1rem;
+    }
+    #search-button:hover {
+      background: black;
+      color: white;
+      border: white solid 2px;
+    }
+    /* map */
     #map {
       height: 500px;
-      width: 500px;
+      width: 70%;
+      border-radius: 0.5rem;
     }
   </style>
   <body>
     <div class="main-container">
       <!-- Header -->
       <header id="header-ui" class="header-ui">
-        <h2>Find crime rate</h2>
-        <div>
+        <div class="title-header">
+          <p class="title">Find Crime Rate</p>
+          <img src="./auth.png" alt="Authentication" class="auth" />
+        </div>
+
+        <div class="input-panel">
           <input
             type="text"
             id="search-input"
@@ -77,31 +118,46 @@
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
 
-      L.marker([51.505,-0.09]).addTo(map)
+      L.marker([51.505, -0.09]).addTo(map);
 
       let geoData;
-      let layerGroup=L.layerGroup().addTo(map);
+      let layerGroup = L.layerGroup().addTo(map);
 
-      fetch("Street_crime_incidents.geojson")
-        .then((res) => res.json())
-        .then((data) => {
-          geoData = data;
-          console.log("geo data", geoData);
+      function getApiData() {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            fetch("Street_crime_incidents.geojson")
+              .then((res) => res.json())
+              .then((data) => resolve(data));
+          }, 2000);
+        });
+      }
 
-          L.geoJSON(geoData, {
+      // search location
+      function searchLocation() {
+        let searchInput = document
+          .getElementById("search-input")
+          .value.toLowerCase();
+
+        layerGroup.clearLayers();
+
+        if (!searchInput) {
+          alert("Please enter a street name");
+          layerGroup.clearLayers();
+          return;
+        }
+
+        getApiData().then((data) => {
+          let filteredData = data.features.filter((f) =>
+            f.properties.STREET_NAME.toLowerCase().includes(searchInput),
+          );
+          L.geoJSON(filteredData, {
             onEachFeature: function (feature, layer) {
               layer.bindPopup(feature.properties.STREET_NAME);
             },
-          // }).addTo(map);
           }).addTo(layerGroup);
         });
-
-        // search location
-        function searchLocation(){
-          let searchInput=document.getElementById("search-input").value.toLowerCase();
-          console.log("search input",searchInput);
-
-        }
+      }
     </script>
   </body>
 </html>
