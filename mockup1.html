@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Find Crime Rate</title>
+  </head>
+  <body>
+    <div class="main-container">
+      <!-- Header -->
+      <header id="header-ui" class="header-ui">
+        <div class="title-header">
+          <p class="title">Find Crime Rate</p>
+          <img src="./auth.png" alt="Authentication" class="auth" />
+        </div>
+
+        <div class="input-panel">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Enter Street Location"
+          />
+          <button id="search-button" onclick="searchLocation()">Search</button>
+        </div>
+      </header>
+      <!-- map -->
+      <div id="map"></div>
+    </div>
+  </body>
+</html>

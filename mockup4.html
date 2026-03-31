@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Find Crime Rate</title>
+  </head>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+  <style>
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      background: linear-gradient(to bottom, #000047, #00001a);
+    }
+    .main-container {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+    }
+    #header-ui {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      color: white;
+    }
+    .title-header {
+      display: flex;
+      justify-content: space-between;
+      width: 60%;
+      align-items: center;
+      border-bottom: rgba(255, 255, 255, 0.269) solid 0.5px;
+      margin: 1rem 1rem;
+    }
+    .title {
+      font-size: 2rem;
+    }
+    .auth {
+      width: 4vw;
+      opacity: 50%;
+    }
+    #search-input {
+      width: 300px;
+      height: 30px;
+      border-radius: 10px;
+      padding: 8px 10px;
+    }
+    #search-button {
+      padding: 15px 32px;
+      border-radius: 10px;
+      border: black solid 2px;
+      margin-left: 1rem;
+    }
+    #search-button:hover {
+      background: black;
+      color: white;
+      border: white solid 2px;
+    }
+    /* map */
+    #map {
+      height: 500px;
+      width: 70%;
+      border-radius: 0.5rem;
+    }
+  </style>
+  <body>
+    <div class="main-container">
+      <!-- Header -->
+      <header id="header-ui" class="header-ui">
+        <div class="title-header">
+          <p class="title">Find Crime Rate</p>
+          <img src="./auth.png" alt="Authentication" class="auth" />
+        </div>
+
+        <div class="input-panel">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Enter Street Location"
+          />
+          <button id="search-button" onclick="searchLocation()">Search</button>
+        </div>
+      </header>
+      <!-- map -->
+      <div id="map"></div>
+    </div>
+    <!-- leaflet map -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"
+      integrity="sha512-OFs3W4DIZ5ZkrDhBFtsCP6JXtMEDGmhl0QPlmWYBJay40TT1n3gt2Xuw8Pf/iezgW9CdabjkNChRqozl/YADmg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <script>
+      var map = L.map("map").setView([51.46352, -2.583139], 10);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+
+      L.marker([51.505, -0.09]).addTo(map);
+
+      let geoData;
+      let layerGroup = L.layerGroup().addTo(map);
+
+      function getApiData() {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            fetch("Street_crime_incidents.geojson")
+              .then((res) => res.json())
+              .then((data) => resolve(data));
+          }, 2000);
+        });
+      }
+
+      // search location
+      function searchLocation() {
+        let searchInput = document
+          .getElementById("search-input")
+          .value.toLowerCase();
+
+        layerGroup.clearLayers();
+
+        if (!searchInput) {
+          alert("Please enter a street name");
+          layerGroup.clearLayers();
+          return;
+        }
+
+        getApiData().then((data) => {
+          let filteredData = data.features.filter((f) =>
+            f.properties.STREET_NAME.toLowerCase().includes(searchInput),
+          );
+          L.geoJSON(filteredData, {
+            onEachFeature: function (feature, layer) {
+              layer.bindPopup(feature.properties.STREET_NAME);
+            },
+          }).addTo(layerGroup);
+        });
+      }
+    </script>
+  </body>
+</html>
