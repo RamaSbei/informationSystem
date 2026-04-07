@@ -122,15 +122,14 @@
 
       let geoData;
       let layerGroup = L.layerGroup().addTo(map);
+      let cached = null;
 
       function getApiData() {
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            fetch("Street_crime_incidents.geojson")
-              .then((res) => res.json())
-              .then((data) => resolve(data));
-          }, 500);
-        });
+        return fetch("Street_crime_incidents.geojson")
+        .then((res)=>res.json())
+        // .then((data)=>{
+        //   return data;
+        // })
       }
 
       // search location
@@ -153,7 +152,13 @@
           );
           L.geoJSON(filteredData, {
             onEachFeature: function (feature, layer) {
-              layer.bindPopup("Street Name: " +feature.properties.STREET_NAME +"<br/>"+ "Crime Category: "+ feature.properties.CRIME_CATEGORY);
+              layer.bindPopup(
+                "Street Name: " +
+                  feature.properties.STREET_NAME +
+                  "<br/>" +
+                  "Crime Category: " +
+                  feature.properties.CRIME_CATEGORY,
+              );
             },
           }).addTo(layerGroup);
         });
