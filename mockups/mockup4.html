@@ -123,14 +123,9 @@
       let geoData;
       let layerGroup = L.layerGroup().addTo(map);
 
-      function getApiData() {
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            fetch("Street_crime_incidents.geojson")
-              .then((res) => res.json())
-              .then((data) => resolve(data));
-          }, 2000);
-        });
+       function getApiData() {
+        return fetch("Street_crime_incidents.geojson")
+        .then((res)=>res.json())
       }
 
       // search location

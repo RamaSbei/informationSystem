@@ -122,14 +122,10 @@
 
       let geoData;
       let layerGroup = L.layerGroup().addTo(map);
-      let cached = null;
-
+    
       function getApiData() {
         return fetch("Street_crime_incidents.geojson")
         .then((res)=>res.json())
-        // .then((data)=>{
-        //   return data;
-        // })
       }
 
       // search location
