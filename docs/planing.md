@@ -2,7 +2,7 @@
 
 ## Find Street Crime Web App
 
-Planning section written by: [Your Name]
+Planning section written by: Mariah and Rama
 
 ## Business Case
 
